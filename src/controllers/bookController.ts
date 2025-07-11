@@ -98,9 +98,9 @@ class BookController {
 
     createBook(req: Request, res: Response) {
         // TODO: implement functionality
-        console.log(req.headers);
-        console.log(req.body);
-        return res.status(201).json(req.body);
+        const statement = `INSERT INTO Books VALUES (${req.body.isbn}, ${req.body.title})`;
+        return this.runAgainstDb(statement, (sqlRetValue) => res.status(201).json(sqlRetValue));
+        // return res.status(201).json(req.body);
         // return res.status(201).json({
         //     error: 'server_error',
         //     error_description: 'Endpoint not implemented yet.',
