@@ -18,10 +18,10 @@ var CONFIG = {
   };
 
 
-function executeStatement(connection) {
+function executeStatement(connection, statement) {
         var Request = require('tedious').Request;
 
-        const request = new Request("SELECT * FROM Books", function(err, rowCount) {
+        const request = new Request(statement, function(err, rowCount) {
         if (err) {
             console.log(err);
         } else {
@@ -61,11 +61,10 @@ class BookController {
         this.router = Router();
         this.router.get('/', this.getBooks.bind(this));
         this.router.get('/:id', this.getBook.bind(this));
-
         this.router.post('/', this.createBook.bind(this));
     }
 
-    getBooks(req: Request, res: Response) {
+    runAgainstDb(statement, callback) {
         var connection = new Connection(CONFIG);
         // Setup event handler when the connection is established. 
         connection.on('connect', async function(err) {
@@ -73,12 +72,17 @@ class BookController {
             console.log('Error: ', err)
             }
             // If no error, then good to go...
-            const books = await executeStatement(connection);
-            return res.status(200).json(books);
+            const sqlRetValue = await executeStatement(connection, statement);
+            return callback(sqlRetValue);
         });
 
         // Initialize the connection.
         connection.connect();
+    }
+
+    getBooks(req: Request, res: Response) {
+        const statement = "SELECT * FROM Books";
+        return this.runAgainstDb(statement, (sqlRetValue) => res.status(200).json(sqlRetValue))
     }
 
     getBook(req: Request, res: Response) {
