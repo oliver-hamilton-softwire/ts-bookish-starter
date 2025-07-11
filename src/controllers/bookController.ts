@@ -98,10 +98,13 @@ class BookController {
 
     createBook(req: Request, res: Response) {
         // TODO: implement functionality
-        return res.status(500).json({
-            error: 'server_error',
-            error_description: 'Endpoint not implemented yet.',
-        });
+        console.log(req.headers);
+        console.log(req.body);
+        return res.status(201).json(req.body);
+        // return res.status(201).json({
+        //     error: 'server_error',
+        //     error_description: 'Endpoint not implemented yet.',
+        // });
     }
 }
 
