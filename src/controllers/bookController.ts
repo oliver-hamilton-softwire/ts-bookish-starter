@@ -82,15 +82,18 @@ class BookController {
 
     getBooks(req: Request, res: Response) {
         const statement = "SELECT * FROM Books";
-        return this.runAgainstDb(statement, (sqlRetValue) => res.status(200).json(sqlRetValue))
+        return this.runAgainstDb(statement, (sqlRetValue) => res.status(200).json(sqlRetValue));
     }
 
     getBook(req: Request, res: Response) {
         // TODO: implement functionality
-        return res.status(500).json({
-            error: 'server_error',
-            error_description: 'Endpoint not implemented yet.',
-        });
+        // return res.status(500).json({
+        //     error: 'server_error',
+        //     error_description: 'Endpoint not implemented yet.',
+        // });
+        const isbn = req.params.id;
+        const statement = `SELECT * FROM Books WHERE isbn = ${isbn}`;
+        return this.runAgainstDb(statement, (sqlRetValue) => res.status(200).json(sqlRetValue));
     }
 
     createBook(req: Request, res: Response) {
